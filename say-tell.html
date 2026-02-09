@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical Communication: Say vs. Tell in Clinical Contexts</title>
+    <style>
+        :root {
+            --brand-primary: #1e40af;
+            --brand-secondary: #0f172a;
+            --accent-success: #059669;
+            --accent-error: #dc2626;
+            --bg-soft: #f8fafc;
+            --text-main: #334155;
+            --white: #ffffff;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            background-color: var(--bg-soft);
+            color: var(--text-main);
+            margin: 0;
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .utility-bar {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 1rem;
+        }
+
+        .copy-btn {
+            background: var(--brand-primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+
+        .copy-btn:hover { opacity: 0.9; }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0;
+            letter-spacing: -0.025em;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: #64748b;
+            margin-top: 0.5rem;
+        }
+
+        .rules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .rule-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            border-top: 4px solid var(--brand-primary);
+        }
+
+        .rule-card h3 {
+            margin-top: 0;
+            color: var(--brand-primary);
+            font-size: 1.25rem;
+        }
+
+        .formula {
+            display: inline-block;
+            background: #eff6ff;
+            color: var(--brand-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+            border: 1px solid #dbeafe;
+        }
+
+        .exercise-section {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .drill-item {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .sentence-input-group {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #1e293b;
+        }
+
+        input[type="text"] {
+            border: 2px solid #cbd5e1;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 1rem;
+            width: 80px;
+            text-align: center;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--brand-primary);
+        }
+
+        .check-btn {
+            margin-top: 1rem;
+            background: #64748b;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .check-btn:hover { background: #475569; }
+
+        .result-area {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .drill-item.answered .result-area {
+            max-height: 300px;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px dashed #cbd5e1;
+        }
+
+        .correction-text {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .correction-text.correct { color: var(--accent-success); }
+        .correction-text.incorrect { color: var(--accent-error); }
+
+        .explanation {
+            color: var(--text-main);
+            font-size: 0.95rem;
+            background: #f8fafc;
+            padding: 10px;
+            border-radius: 6px;
+            border-left: 4px solid var(--accent-success);
+        }
+
+        .discussion-block {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: #0f172a;
+            color: #f8fafc;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        #statusMsg {
+            font-size: 0.8rem;
+            margin-right: 10px;
+            color: var(--accent-success);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+                /* Dynamic Discussion Block Styles */
+        .discussion-block {
+            margin-top: 2rem;
+            padding: 2rem;
+            background: var(--brand-secondary);
+            color: #f8fafc;
+            border-radius: 12px;
+            text-align: center;
+            position: relative;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .discussion-block h3 {
+            color: #38bdf8;
+            margin: 0 0 1rem 0;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 1rem;
+        }
+
+        #discussionText {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .carousel-nav {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: #38bdf8;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 0;
+            text-decoration: underline;
+            font-weight: normal;
+        }
+
+        .nav-link:hover {
+            color: #7dd3fc;
+            background: none;
+            transform: none;
+        }
+
+        @media (max-width: 768px) {
+            .main-content { grid-template-columns: 1fr; }
+            .trainer-container { margin: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- <div class="utility-bar">
+    <span id="statusMsg">Copied to clipboard!</span>
+    <button class="copy-btn" onclick="copyFullCode()">Copy Code for Local Browser</button>
+</div> -->
+
+<div class="container">
+    <header>
+        <h1>Say vs. Tell</h1>
+        <div class="subtitle">Precision in Biomedical Technical Communication</div>
+    </header>
+
+    <div class="rules-grid">
+        <div class="rule-card">
+            <h3>Verb: Tell</h3>
+            <p>Focuses on the <strong>recipient</strong>. Mandatory when providing direct instructions or information to a person.</p>
+            <div class="formula">tell + [person] + [information]</div>
+        </div>
+        <div class="rule-card" style="border-top-color: #8b5cf6;">
+            <h3>Verb: Say</h3>
+            <p>Focuses on the <strong>message content</strong>. Used when the emphasis is on the actual data or statement.</p>
+            <div class="formula">say + [info] (+ to [person])</div>
+        </div>
+    </div>
+
+    <div class="exercise-section">
+        <div class="exercise-header">
+            <h2 style="margin:0 0 1rem 0;">Clinical Case Drills</h2>
+            <p style="color: #64748b; margin-bottom: 2rem;">Fill in the blanks with the correct form of <strong>say</strong> or <strong>tell</strong>.</p>
+        </div>
+
+        <div id="quiz-container">
+            <!-- Questions will be injected here by JavaScript -->
+        </div>
+    </div>
+
+    <!-- <div class="discussion-block">
+        <h2 style="color: #38bdf8; margin-bottom: 1rem;">Discussion</h2>
+        <p style="font-size: 1.25rem; font-weight: 500; margin: 0;">"How does clear communication impact patient safety during equipment failure?"</p>
+    </div> -->
+
+     <div class="discussion-block">
+        <h3>Discussion Topic</h3>
+        <p id="discussionText">"How does clear communication impact patient safety during equipment failure?"</p>
+        <div class="carousel-nav">
+            <button class="nav-link" onclick="prevTopic()">Previous Topic</button>
+            <button class="nav-link" onclick="nextTopic()">Next Topic</button>
+        </div>
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; padding: 20px; background-color: #f5f5f5; min-height: 100px; align-items: center;">
+        <a href="devices.html" style="
+            padding: 10px 20px; 
+            background-color: #e0e0e0; 
+            color: #333; 
+            text-decoration: none; 
+            border-radius: 6px; 
+            font-size: 16px; 
+            font-weight: 500; 
+            border: 1px solid #d0d0d0; 
+            transition: all 0.2s ease; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        " 
+        onmouseover="this.style.backgroundColor='#d0d0d0';this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)';this.style.transform='translateY(-1px)';"
+        onmouseout="this.style.backgroundColor='#e0e0e0';this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)';this.style.transform='translateY(0)';">
+            Device Vocabularly
+        </a>
+    </div>
+</div>
+
+<script>
+    const discussionTopics = [
+        "How does clear communication impact patient safety during equipment failure?",
+        "What are the linguistic challenges in documenting a medical device error report?",
+        "How should a technician balance clinical urgency with technical precision when speaking to a physician?",
+        "Discuss the ethical implications of using 'workarounds' on malfunctioning clinical equipment.",
+        "In your experience, what is the most common vocabulary error made during equipment handover?"
+    ];
+
+    let currentIdx = 0;
+    let topicIdx = 0;
+
+
+       // Discussion Carousel Logic
+    function updateTopic() {
+        const textElement = document.getElementById('discussionText');
+        textElement.style.opacity = '0';
+        
+        setTimeout(() => {
+            textElement.innerText = `"${discussionTopics[topicIdx]}"`;
+            textElement.style.opacity = '1';
+        }, 300);
+    }
+
+    function nextTopic() {
+        topicIdx = (topicIdx + 1) % discussionTopics.length;
+        updateTopic();
+    }
+
+    function prevTopic() {
+        topicIdx = (topicIdx - 1 + discussionTopics.length) % discussionTopics.length;
+        updateTopic();
+    }
+
+    const questions = [
+        {
+            id: 1,
+            before: "When a nurse calls about an alarm problem, the technician usually",
+            after: "them what steps to follow.",
+            answer: "tells",
+            rationale: "The verb is followed immediately by the personal pronoun 'them,' identifying the direct recipient."
+        },
+        {
+            id: 2,
+            before: "After repairing a monitor, the technician must",
+            after: "to the physician that the device is safe.",
+            answer: "say",
+            rationale: "The focus is the safety status. The recipient is introduced with the preposition 'to'."
+        },
+        {
+            id: 3,
+            before: "In the maintenance report, the technician will",
+            after: "what the error was and how they fixed it.",
+            answer: "say",
+            rationale: "Reports convey objective data. No direct human recipient is being addressed in the verb phrase."
+        },
+        {
+            id: 4,
+            before: "During staff training, the technician",
+            after: "the nurses how to use the new infusion pump correctly.",
+            answer: "tells",
+            rationale: "This is a direct pedagogical interaction with 'the nurses' acting as the direct object."
+        },
+        {
+            id: 5,
+            before: "If the device fails again,",
+            after: "to the clinical team why the problem keeps happening.",
+            answer: "say",
+            rationale: "Focuses on the explanation of the cause; recipient follows 'to'."
+        },
+        {
+            id: 6,
+            before: "Could you please",
+            after: "me the serial number of the malfunctioning unit?",
+            answer: "tell",
+            rationale: "The pronoun 'me' follows the verb directly, making it the recipient of the information."
+        },
+        {
+            id: 7,
+            before: "The supervisor",
+            after: "that all ventilators must undergo PM next week.",
+            answer: "said",
+            rationale: "Focuses on the content of the announcement. No recipient is mentioned immediately after the verb."
+        },
+        {
+            id: 8,
+            before: "The lead engineer",
+            after: "the junior staff to double-check the calibration settings.",
+            answer: "told",
+            rationale: "Followed by the direct recipient ('the junior staff') to give an instruction."
+        }
+    ];
+
+    function initQuiz() {
+        const container = document.getElementById('quiz-container');
+        questions.forEach(q => {
+            const item = document.createElement('div');
+            item.className = 'drill-item';
+            item.id = `q-${q.id}`;
+            item.innerHTML = `
+                <div class="sentence-input-group">
+                    <span>${q.id}. ${q.before}</span>
+                    <input type="text" id="input-${q.id}" placeholder="...">
+                    <span>${q.after}</span>
+                </div>
+                <button class="check-btn" onclick="checkAnswer(${q.id})">Check Answer</button>
+                <div class="result-area">
+                    <div id="correction-${q.id}" class="correction-text"></div>
+                    <div class="explanation">
+                        <strong>Rationale:</strong> ${q.rationale}
+                    </div>
+                </div>
+            `;
+            container.appendChild(item);
+        });
+    }
+
+    window.checkAnswer = function(id) {
+        const q = questions.find(item => item.id === id);
+        const userInput = document.getElementById(`input-${id}`).value.trim().toLowerCase();
+        const card = document.getElementById(`q-${id}`);
+        const resultArea = document.getElementById(`correction-${id}`);
+        
+        const isCorrect = userInput === q.answer.toLowerCase() || (q.answer === "said" && userInput === "said") || (q.answer === "told" && userInput === "told");
+        
+        resultArea.className = isCorrect ? 'correction-text correct' : 'correction-text incorrect';
+        resultArea.innerHTML = isCorrect ? 
+            `Correct! The sentence is: "${q.before} <strong>${q.answer}</strong> ${q.after}"` : 
+            `Incorrect. The correct word is "<strong>${q.answer}</strong>".<br>Your sentence would be: "${q.before} ${q.answer} ${q.after}"`;
+        
+        card.classList.add('answered');
+    };
+
+    function copyFullCode() {
+        const docText = document.documentElement.outerHTML;
+        const textArea = document.createElement("textarea");
+        textArea.value = docText;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            const msg = document.getElementById('statusMsg');
+            msg.style.opacity = '1';
+            setTimeout(() => { msg.style.opacity = '0'; }, 2000);
+        } catch (err) {
+            console.error('Copy failed', err);
+        }
+        document.body.removeChild(textArea);
+    }
+
+    initQuiz();
+</script>
+</body>
+</html>
