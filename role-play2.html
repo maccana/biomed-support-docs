@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BioMed English Trainer – Tech Support Role Play</title>
+<style>
+  :root {
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --success: #059669;
+    --bg: #f9fafb;
+    --card: #ffffff;
+    --text: #1f2937;
+    --border: #e5e7eb;
+    --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5;
+    color: var(--text);
+    background: var(--bg);
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+  .app-header {
+    background: var(--primary);
+    color: white;
+    padding: 1.5rem 1.5rem 1.25rem;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .app-header h1 {
+    margin: 0 0 0.25rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+  .app-header p {
+    margin: 0;
+    opacity: 0.95;
+    font-size: 0.9rem;
+  }
+  .content-wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2.5rem 1.25rem 2rem;
+  }
+  .section {
+    margin-bottom: 1.75rem;
+  }
+  .section:last-child {
+    margin-bottom: 4rem;
+  }
+  .accordion {
+    background: var(--card);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    margin-bottom: 1.25rem;
+    overflow: hidden;
+  }
+  .accordion-header {
+    background: var(--primary);
+    color: white;
+    padding: 1.25rem 1.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s ease;
+  }
+  .accordion-header:hover {
+    background: var(--primary-dark);
+  }
+  .accordion-header::after {
+    content: '▼';
+    font-size: 0.8rem;
+    transition: transform 0.2s ease;
+  }
+  .accordion-header.active::after {
+    transform: rotate(180deg);
+  }
+  .accordion-content {
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+  }
+  .accordion-content.active {
+    max-height: 1200px;
+    padding: 1.5rem;
+  }
+  .carousel {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    background: var(--card);
+    height: 130px;
+  }
+  .carousel-inner {
+    display: flex;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 100%;
+  }
+  .carousel-item {
+    min-width: 100%;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+    border-right: 1px solid var(--border);
+    text-align: center;
+  }
+  .carousel-item:last-child {
+    border-right: none;
+  }
+  .carousel-item strong {
+    font-size: 1.1rem;
+    color: var(--primary-dark);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  .carousel-item p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #6b7280;
+  }
+  .carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.9);
+    border: 1px solid var(--border);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: var(--text);
+    box-shadow: var(--shadow);
+    transition: all 0.2s ease;
+  }
+  .carousel-nav:hover {
+    background: white;
+    transform: translateY(-50%) scale(1.05);
+  }
+  .carousel-nav.prev { left: 12px; }
+  .carousel-nav.next { right: 12px; }
+  .prompt {
+    background: #eff6ff;
+    border-left: 4px solid var(--primary);
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+    font-style: italic;
+    border-radius: 0 12px 12px 0;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+  }
+  .glossary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    font-size: 0.95rem;
+  }
+  .glossary-grid div {
+    background: #f8fafc;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 3px solid var(--primary);
+  }
+  .glossary-grid strong {
+    color: var(--primary-dark);
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+  .btn {
+    background: var(--success);
+    color: white;
+    border: none;
+    padding: 0.875rem 1.75rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin: 0.75rem 0.5rem 0 0;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow);
+  }
+  .btn:hover {
+    background: #047857;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+  }
+  .roles-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+  .role-card {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    padding: 1.25rem;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .role-card strong {
+    color: var(--success);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  @media (min-width: 768px) {
+    .content-wrapper {
+      padding: 3rem 2rem 2.5rem;
+    }
+    .carousel {
+      height: 150px;
+    }
+    .carousel-item {
+      padding: 1.75rem;
+    }
+  }
+</style>
+</head>
+<body>
+<header class="app-header">
+  <h1>BioMed English</h1>
+  <p>Tech Support Role Play</p>
+</header>
+
+<div class="content-wrapper">
+  <main>
+    <!-- Objective -->
+    <section class="section">
+      <div class="accordion">
+        <div class="accordion-header">
+          🎯 Objective
+        </div>
+        <div class="accordion-content">
+          <p>Practice professional phone calls in English to report biomedical equipment issues and get troubleshooting help.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Roles -->
+    <section class="section">
+      <div class="accordion">
+        <div class="accordion-header">
+          👥 Roles
+        </div>
+        <div class="accordion-content">
+          <div class="roles-grid">
+            <div class="role-card">
+              <strong>Hospital Technician</strong>
+              Describes issue & answers questions.
+            </div>
+            <div class="role-card">
+              <strong>Support Rep</strong>
+              Asks details & gives steps.
+            </div>
+          </div>
+          <p style="font-size:0.9rem; color:#6b7280; margin-top:1.25rem;">Switch roles after one call.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Instructions -->
+    <section class="section">
+      <div class="accordion">
+        <div class="accordion-header">
+          📋 Instructions
+        </div>
+        <div class="accordion-content">
+          <ol style="margin:0; padding-left:1.5rem;">
+            <li>Pick a scenario from carousel.</li>
+            <li>Use example prompts to start.</li>
+            <li>Keep professional tone & precise vocab.</li>
+            <li>Summarize next steps at end.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scenarios Carousel -->
+    <section class="section">
+      <div class="accordion">
+        <div class="accordion-header">
+          🏥 Scenarios (Swipe/Click)
+        </div>
+        <div class="accordion-content">
+          <div class="carousel" id="carouselContainer">
+            <div class="carousel-inner" id="scenariosCarousel">
+              <div class="carousel-item">
+                <strong>1. Ventilator</strong>
+                <p>Won't start post power outage. Backup is OK.</p>
+              </div>
+              <div class="carousel-item">
+                <strong>2. Defibrillator</strong>
+                <p>Fails self-test. Unknown error & low battery.</p>
+              </div>
+              <div class="carousel-item">
+                <strong>3. Pulse Oximeter</strong>
+                <p>Fluctuating readings. Possible sensor issue.</p>
+              </div>
+              <div class="carousel-item">
+                <strong>4. Infusion Pump</strong>
+                <p>E103 flow sensor fault. Alarm persists.</p>
+              </div>
+              <div class="carousel-item">
+                <strong>5. Patient Monitor</strong>
+                <p>Screen flickers, won't reboot.</p>
+              </div>
+            </div>
+            <button class="carousel-nav prev" onclick="prevSlide()">‹</button>
+            <button class="carousel-nav next" onclick="nextSlide()">›</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Example Prompts -->
+    <section class="section">
+      <div class="accordion">
+        <div class="accordion-header">
+          💬 Example Prompts
+        </div>
+        <div class="accordion-content">
+          <div class="prompt">Hello, this is [Name] from [Hospital]. Problem with [Device]. Can you help troubleshoot?</div>
+          <div class="prompt">Hi, error code [XXX] on [Equipment]. What does it mean?</div>
+          <div class="prompt">Device won’t start despite manual steps. Recommendations?</div>
+          <div class="prompt">Standard checks done, issue persists. Next steps?</div>
+          <div class="prompt">Need on-site if not remote fix. Info for scheduling?</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Grammar -->
+    <section class="section">
+      <div class="accordion">
+        <div class="accordion-header">
+          📚 Grammar: Present Perfect vs Past
+        </div>
+        <div class="accordion-content">
+          <p><strong>Present Perfect:</strong> Current connection (“We’ve replaced tubing.”)</p>
+          <p><strong>Simple Past:</strong> Specific time (“Replaced yesterday.”)</p>
+          <p style="font-size:0.9rem; color:#6b7280;">Use both when describing checks.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Vocab -->
+    <section class="section">
+      <div class="accordion">
+        <div class="accordion-header">
+          📖 Useful Vocabulary
+        </div>
+        <div class="accordion-content">
+          <div class="glossary-grid">
+            <div><strong>outlet</strong><br>prise électrique</div>
+            <div><strong>power supply</strong><br>alimentation</div>
+            <div><strong>error code</strong><br>code d’erreur</div>
+            <div><strong>sensor</strong><br>capteur</div>
+            <div><strong>alarm</strong><br>alarme</div>
+            <div><strong>shutdown</strong><br>arrêt</div>
+            <div><strong>reboot</strong><br>redémarrer</div>
+            <div><strong>flow sensor</strong><br>capteur de débit</div>
+            <div><strong>self-test</strong><br>auto-test</div>
+            <div><strong>cable connection</strong><br>connexion de câble</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reflection -->
+    <section class="section">
+      <div class="accordion">
+        <div class="accordion-header">
+          ✅ Reflection Questions
+        </div>
+        <div class="accordion-content">
+          <ul style="margin:0; padding-left:1.5rem;">
+            <li>Clear & logical problem description?</li>
+            <li>Correct tenses used?</li>
+            <li>Key info confirmed (model, code)?</li>
+            <li>Next steps summarized politely?</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer style="text-align:center; padding:2rem 1.5rem; background:var(--card); box-shadow:var(--shadow-lg);">
+  <p style="margin:0 0 1rem; color:#6b7280; font-size:0.9rem;"><strong>Tip:</strong> Review vocab & tenses before role play. Practice clarity!</p>
+  <button class="btn" onclick="location.reload()">New Session</button>
+</footer>
+
+<script>
+  // Accordion functionality
+  document.querySelectorAll('.accordion-header').forEach(header => {
+    header.addEventListener('click', () => {
+      const content = header.nextElementSibling;
+      const isActive = content.classList.contains('active');
+      // Close all
+      document.querySelectorAll('.accordion-content').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.accordion-header').forEach(h => h.classList.remove('active'));
+      // Toggle current
+      if (!isActive) {
+        content.classList.add('active');
+        header.classList.add('active');
+      }
+    });
+  });
+
+  // Carousel
+  let currentSlide = 0;
+  const totalSlides = 5;
+
+  function updateCarousel() {
+    document.getElementById('scenariosCarousel').style.transform = `translateX(-${currentSlide * 100}%)`;
+  }
+
+  function nextSlide() {
+    currentSlide = (currentSlide + 1) % totalSlides;
+    updateCarousel();
+  }
+
+  function prevSlide() {
+    currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+    updateCarousel();
+  }
+
+  // Auto-open first accordion on load
+  setTimeout(() => {
+    document.querySelector('.accordion-header').click();
+  }, 600);
+
+  // Touch/swipe support for carousel
+  let startX = 0;
+  const carousel = document.getElementById('carouselContainer');
+  carousel.addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+  });
+  carousel.addEventListener('touchend', e => {
+    const endX = e.changedTouches[0].clientX;
+    if (startX - endX > 50) nextSlide();
+    if (endX - startX > 50) prevSlide();
+  });
+</script>
+</body>
+</html>
